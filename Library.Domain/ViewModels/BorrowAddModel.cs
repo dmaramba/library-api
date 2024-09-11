@@ -23,7 +23,7 @@ namespace Library.Domain.ViewModels
 
 
         /// <summary>
-        /// The duee date for returning the book
+        /// The due date for returning the book
         /// </summary>
         [Required]
         public DateTime DueDate { get; set; }
