@@ -93,5 +93,20 @@ namespace Library.Api.Controllers
             var response = await bookService.ReserveBook(reserveModel);
             return Ok(response);
         }
+
+
+        /// <summary>
+        /// Reserve a book
+        /// </summary>
+        /// <param name="reserveModel">The model with book and customer</param>
+        [SwaggerOperation(Tags = new[] { "Books" })]
+        [HttpPost(Name = nameof(ReserveBook))]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+        public async Task<IActionResult> ReturnBook([FromBody] ReturnModel returnModel)
+        {
+            await bookService.ReturnBook(returnModel);
+            return Ok();
+        }
     }
 }

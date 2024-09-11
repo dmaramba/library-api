@@ -18,5 +18,7 @@ namespace Library.Infrastructure.Services
         Task<BorrowBook> BorrowBook(BorrowModel borrow);
 
         Task<ReserveBook> ReserveBook(ReserveModel reserve);
+
+        Task ReturnBook(ReturnModel returnModel);
     }
 }

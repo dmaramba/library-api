@@ -132,7 +132,16 @@ namespace Library.Infrastructure.Services
             return reserved;
         }
 
-
+        public async Task ReturnBook(ReturnModel returnModel)
+        {
+            var borrowItem = _borrowBookRepository.Find(x => x.BookId == returnModel.BookId && x.CustomerId == returnModel.CustomerId && x.Returned == false).FirstOrDefault();
+            if (borrowItem != null)
+            {
+                borrowItem.Returned = true;
+                await _borrowBookRepository.UpdateAsync(borrowItem);
+                updateBookAvailability(borrowItem.BookId);
+            }
+        }
 
 
     }
