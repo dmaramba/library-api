@@ -19,7 +19,7 @@ namespace Library.Infrastructure.Context.Seeders
             (
                 new Book
                 {
-                    Id=1,
+                    Id = 1,
                     Title = "The Grass is Always Greener",
                     Author = "Jeffrey Archer",
                     Total = 2,
@@ -62,3 +62,4 @@ namespace Library.Infrastructure.Context.Seeders
         }
     }
 }
+

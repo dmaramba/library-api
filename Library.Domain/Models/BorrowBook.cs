@@ -14,5 +14,8 @@ namespace Library.Domain.Models
         public int BookId { get; set; }
         public int CustomerId { get; set; }
         public DateTime? DueDate { get; set; }
+        public bool Returned { get; set; }
+        public required Book Book { get; set; }
+        public required Customer Customer { get; set; }
     }
 }

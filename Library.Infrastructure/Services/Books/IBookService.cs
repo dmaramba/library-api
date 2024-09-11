@@ -1,4 +1,5 @@
 ﻿using Library.Domain.Models;
+using Library.Domain.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,9 @@ namespace Library.Infrastructure.Services
 {
     public interface IBookService
     {
-        IEnumerable<Book> GetBooks();
-        IEnumerable<Book> GetBookByTitle(string title);
+        IEnumerable<BookModel> GetBooks();
+        IEnumerable<BookModel> GetBookByTitle(string title);
+
+        void AddBook(BookAddModel book);
     }
 }

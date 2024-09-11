@@ -27,6 +27,16 @@ builder.Host
            .As<IBookRepository>()
            .InstancePerLifetimeScope();
 
+
+        container.RegisterType<BorrowBookRepository>()
+           .As<IBorrowBookRepository>()
+           .InstancePerLifetimeScope();
+
+
+        container.RegisterType<ReserveBookRepository>()
+           .As<IReserveBookRepository>()
+           .InstancePerLifetimeScope();
+
         container.RegisterType<BookService>()
                 .As<IBookService>()
                 .InstancePerLifetimeScope();
