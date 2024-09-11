@@ -52,14 +52,46 @@ namespace Library.Api.Controllers
         /// <summary>
         /// Add new book to the library
         /// </summary>
+        /// <param name="book">The model with book details</param>
         [SwaggerOperation(Tags = new[] { "Books" })]
-        [HttpPost]
+        [HttpPost(Name = nameof(AddBook))]
         [ProducesResponseType(typeof(IReadOnlyCollection<BookModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
-        public IActionResult AddBook(BookAddModel book)
+        public IActionResult AddBook([FromBody] BookAddModel book)
         {
             bookService.AddBook(book);
             return Ok();
+        }
+
+
+
+        /// <summary>
+        /// Borrow a book
+        /// </summary>
+        /// <param name="borrowModel">The model with book and customer</param>
+        [SwaggerOperation(Tags = new[] { "Books" })]
+        [HttpPost(Name = nameof(BorrowBook))]
+        [ProducesResponseType(typeof(BorrowBook), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+        public async Task<IActionResult> BorrowBook([FromBody] BorrowModel borrowModel)
+        {
+            var response = await bookService.BorrowBook(borrowModel);
+            return Ok(response);
+        }
+
+
+        /// <summary>
+        /// Reserve a book
+        /// </summary>
+        /// <param name="reserveModel">The model with book and customer</param>
+        [SwaggerOperation(Tags = new[] { "Books" })]
+        [HttpPost(Name = nameof(ReserveBook))]
+        [ProducesResponseType(typeof(BorrowBook), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+        public async Task<IActionResult> ReserveBook([FromBody] ReserveModel reserveModel)
+        {
+            var response = await bookService.ReserveBook(reserveModel);
+            return Ok(response);
         }
     }
 }

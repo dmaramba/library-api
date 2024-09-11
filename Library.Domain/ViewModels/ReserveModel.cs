@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Library.Domain.ViewModels
 {
-    public class BorrowAddModel
+    public class ReserveModel
     {
         /// <summary>
         /// The customer Id
@@ -22,10 +22,6 @@ namespace Library.Domain.ViewModels
         public int BookId { get; set; }
 
 
-        /// <summary>
-        /// The due date for returning the book
-        /// </summary>
-        [Required]
-        public DateTime DueDate { get; set; }
+   
     }
 }

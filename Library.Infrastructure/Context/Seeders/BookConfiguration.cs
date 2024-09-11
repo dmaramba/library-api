@@ -14,7 +14,7 @@ namespace Library.Infrastructure.Context.Seeders
     {
         public void Configure(EntityTypeBuilder<Book> builder)
         {
-
+            builder.HasKey(b => b.Id);
             builder.HasData
             (
                 new Book

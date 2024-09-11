@@ -13,6 +13,10 @@ namespace Library.Infrastructure.Services
         IEnumerable<BookModel> GetBooks();
         IEnumerable<BookModel> GetBookByTitle(string title);
 
-        void AddBook(BookAddModel book);
+        Task AddBook(BookAddModel book);
+
+        Task<BorrowBook> BorrowBook(BorrowModel borrow);
+
+        Task<ReserveBook> ReserveBook(ReserveModel reserve);
     }
 }

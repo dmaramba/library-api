@@ -27,6 +27,7 @@ namespace Library.Infrastructure.Context
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfiguration(new BookConfiguration());
+            builder.ApplyConfiguration(new CustomerConfiguration());
             base.OnModelCreating(builder);
         }
 

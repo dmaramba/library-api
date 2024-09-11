@@ -1,4 +1,5 @@
 ﻿using Library.Infrastructure.Context;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,24 +14,9 @@ namespace Library.Infrastructure.Repository
         protected readonly LibraryContext _context;
         public GenericRepository(LibraryContext context)
         {
-
             _context = context;
             _context.Database.EnsureCreated();
         }
-
-        public void Add(T entity)
-        {
-            _context.Set<T>().Add(entity);
-            _context.SaveChanges();
-            _context.ChangeTracker.Clear();
-        }
-        public void AddRange(IEnumerable<T> entities)
-        {
-            _context.Set<T>().AddRange(entities);
-            _context.SaveChanges();
-            _context.ChangeTracker.Clear();
-        }
-
         public IEnumerable<T> Find(Expression<Func<T, bool>> expression)
         {
             return _context.Set<T>().Where(expression);
@@ -41,32 +27,44 @@ namespace Library.Infrastructure.Repository
             return _context.Set<T>().ToList();
         }
 
-        public T? GetById(int id)
+        public async Task AddAsync(T entity)
         {
-            return _context.Set<T>().Find(id);
+            await _context.Set<T>().AddAsync(entity);
+            await _context.SaveChangesAsync();
+            _context.ChangeTracker.Clear();
         }
 
-        public void Remove(T entity)
+        public async Task AddRangeAsync(IEnumerable<T> entities)
+        {
+            await _context.Set<T>().AddRangeAsync(entities);
+            await _context.SaveChangesAsync();
+            _context.ChangeTracker.Clear();
+        }
+
+        public async Task<T?> GetByIdAsync(int id)
+        {
+            return await _context.Set<T>().FindAsync(id);
+        }
+
+        public async Task RemoveAsync(T entity)
         {
             _context.Set<T>().Remove(entity);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             _context.ChangeTracker.Clear();
         }
 
-        public void RemoveRange(IEnumerable<T> entities)
+        public async Task RemoveRangeAsync(IEnumerable<T> entities)
         {
             _context.Set<T>().RemoveRange(entities);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             _context.ChangeTracker.Clear();
         }
 
-        public void Update(T entity)
+        public async Task UpdateAsync(T entity)
         {
             _context.Set<T>().Update(entity);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             _context.ChangeTracker.Clear();
         }
-      
-
     }
 }
