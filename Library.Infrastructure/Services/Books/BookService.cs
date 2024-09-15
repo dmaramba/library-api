@@ -119,12 +119,12 @@ namespace Library.Infrastructure.Services
             return bookList;
         }
 
-        public async Task<ReserveBook> ReserveBook(ReserveModel reserve)
+        public async Task<ReserveBook> ReserveBook(ReserveModel reserve, int period)
         {
             var reserved = _reserveBookRepository.Find(x => x.BookId == reserve.BookId && x.CustomerId == reserve.CustomerId && x.DueDate > DateTime.Now).FirstOrDefault();
             if (reserved == null)
             {
-                var borrowItem = new ReserveBook { BookId = reserve.BookId, CustomerId = reserve.CustomerId, DueDate = DateTime.Now.AddHours(24) };
+                var borrowItem = new ReserveBook { BookId = reserve.BookId, CustomerId = reserve.CustomerId, DueDate = DateTime.Now.AddHours(period) };
                 await _reserveBookRepository.AddAsync(borrowItem);
                 updateBookAvailability(reserve.BookId);
                 return borrowItem;

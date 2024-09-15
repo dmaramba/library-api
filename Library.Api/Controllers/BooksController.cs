@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.Annotations;
 using static System.Reflection.Metadata.BlobBuilder;
 
@@ -15,9 +16,11 @@ namespace Library.Api.Controllers
     public class BooksController : ControllerBase
     {
         private readonly IBookService bookService;
-        public BooksController(IBookService bookService)
+        private readonly LibrarySetting settings;
+        public BooksController(IBookService bookService, IOptions<LibrarySetting> settings)
         {
             this.bookService = bookService;
+            this.settings = settings?.Value;
         }
 
 
@@ -66,7 +69,7 @@ namespace Library.Api.Controllers
 
 
         /// <summary>
-        /// Borrow a book
+        /// Borrow a book by admin
         /// </summary>
         /// <param name="borrowModel">The model with book and customer</param>
         [SwaggerOperation(Tags = new[] { "Books" })]
@@ -81,7 +84,7 @@ namespace Library.Api.Controllers
 
 
         /// <summary>
-        /// Reserve a book
+        /// Reserve a book by admin
         /// </summary>
         /// <param name="reserveModel">The model with book and customer</param>
         [SwaggerOperation(Tags = new[] { "Books" })]
@@ -90,17 +93,17 @@ namespace Library.Api.Controllers
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> ReserveBook([FromBody] ReserveModel reserveModel)
         {
-            var response = await bookService.ReserveBook(reserveModel);
+            var response = await bookService.ReserveBook(reserveModel, settings.BorrowMaxDay);
             return Ok(response);
         }
 
 
         /// <summary>
-        /// Reserve a book
+        /// Return a book by admin
         /// </summary>
-        /// <param name="reserveModel">The model with book and customer</param>
+        /// <param name="returnModel">The model with book and customer</param>
         [SwaggerOperation(Tags = new[] { "Books" })]
-        [HttpPost(Name = nameof(ReserveBook))]
+        [HttpPost(Name = nameof(ReturnBook))]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> ReturnBook([FromBody] ReturnModel returnModel)
@@ -108,5 +111,7 @@ namespace Library.Api.Controllers
             await bookService.ReturnBook(returnModel);
             return Ok();
         }
+
+
     }
 }

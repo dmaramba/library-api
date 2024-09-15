@@ -1,4 +1,5 @@
 ﻿using Library.Domain.Models;
+using Library.Domain.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,5 +10,6 @@ namespace Library.Infrastructure.Repository
 {
     public interface ICustomerRepository : IGenericRepository<Customer>
     {
+        public CustomerModel GetCustomerData(int customerId);
     }
 }
