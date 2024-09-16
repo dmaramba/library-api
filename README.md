@@ -40,7 +40,7 @@ The project currently use in memory database, but a database server can be setup
 
 ### OAuth 2.0 Setup
 
-The project  IdentityServer4 to handle authentication and authorization using  JWT tokens that clients can use to authenticate request. Once the server been setup change the configuration url in the app seetings
+The project  IdentityServer4 to handle authentication and authorization using  JWT tokens that API can use to authenticate request. Once the server been setup change the configuration url in the app seetings
 
 ```json
   "IdentityServer": {
