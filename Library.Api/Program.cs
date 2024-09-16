@@ -84,6 +84,13 @@ builder.Host
            .As<IBookRepository>()
            .InstancePerLifetimeScope();
 
+        container.RegisterType<CustomerRepository>()
+        .As<ICustomerRepository>()
+        .InstancePerLifetimeScope();
+
+        container.RegisterType<NotificationRepository>()
+        .As<INotificationRepository>()
+        .InstancePerLifetimeScope();
 
         container.RegisterType<BorrowBookRepository>()
            .As<IBorrowBookRepository>()
@@ -93,6 +100,14 @@ builder.Host
         container.RegisterType<ReserveBookRepository>()
            .As<IReserveBookRepository>()
            .InstancePerLifetimeScope();
+
+        container.RegisterType<NotificationService>()
+               .As<INotificationService>()
+               .InstancePerLifetimeScope();
+
+        container.RegisterType<CustomerService>()
+               .As<ICustomerService>()
+               .InstancePerLifetimeScope();
 
         container.RegisterType<BookService>()
                 .As<IBookService>()

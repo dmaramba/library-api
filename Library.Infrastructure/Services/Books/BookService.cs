@@ -18,12 +18,14 @@ namespace Library.Infrastructure.Services
         private readonly IBorrowBookRepository _borrowBookRepository;
         private readonly IReserveBookRepository _reserveBookRepository;
         private readonly ILogger<BookService> _logger;
-        public BookService(ILogger<BookService> logger, IBookRepository bookRepository, IBorrowBookRepository borrowBookRepository, IReserveBookRepository reserveBookRepository)
+        private readonly INotificationService _notificationService;
+        public BookService(ILogger<BookService> logger, IBookRepository bookRepository, IBorrowBookRepository borrowBookRepository, IReserveBookRepository reserveBookRepository, INotificationService notificationService)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _bookRepository = bookRepository ?? throw new ArgumentNullException(nameof(bookRepository));
             _borrowBookRepository = borrowBookRepository ?? throw new ArgumentNullException(nameof(borrowBookRepository));
             _reserveBookRepository = reserveBookRepository ?? throw new ArgumentNullException(nameof(reserveBookRepository));
+            _notificationService = notificationService ?? throw new ArgumentNullException(nameof(notificationService));
         }
 
         public async Task AddBook(BookAddModel book)
@@ -57,6 +59,17 @@ namespace Library.Infrastructure.Services
                 {
                     book.Available = false;
                     await _bookRepository.UpdateAsync(book);
+                }
+                else
+                {
+                    if (totalBooksOut < book.Total && !book.Available)
+                    {
+                        book.Available = true;
+                        await _bookRepository.UpdateAsync(book);
+
+                        //send notifications to customers awaiting for the book
+                        await _notificationService.SendNotificationForBook(bookId);
+                    }
                 }
             }
         }

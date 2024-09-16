@@ -21,6 +21,18 @@ namespace Library.Domain.ViewModels
         /// </summary>
         public required string Author { get; set; }
 
+
+        /// <summary>
+        /// Customer name
+        /// </summary>
+        public required string Name { get; set; }
+
+        /// <summary>
+        /// Customer Email
+        /// </summary>
+        public required string Email { get; set; }
+
+
         /// <summary>
         /// The return date or expiry of book reserve
         /// </summary>
