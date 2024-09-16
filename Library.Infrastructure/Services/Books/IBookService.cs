@@ -11,6 +11,7 @@ namespace Library.Infrastructure.Services
     public interface IBookService
     {
         IEnumerable<BookModel> GetBooks();
+
         IEnumerable<BookModel> GetBookByTitle(string title);
 
         Task AddBook(BookAddModel book);
@@ -20,5 +21,7 @@ namespace Library.Infrastructure.Services
         Task<ReserveBook> ReserveBook(ReserveModel reserve, int period);
 
         Task ReturnBook(ReturnModel returnModel);
+
+        Task CancelReservation(int id);
     }
 }

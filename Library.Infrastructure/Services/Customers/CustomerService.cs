@@ -20,6 +20,11 @@ namespace Library.Infrastructure.Services
             await _customerRepository.AddAsync(customer);
         }
 
+        public List<CustomerBook> GetBorrowedBooks()
+        {
+           return _customerRepository.GetBorrowedBooks();
+        }
+
         public CustomerModel GetCustomer(int customerId)
         {
 
@@ -31,6 +36,11 @@ namespace Library.Infrastructure.Services
         {
             var customers = _customerRepository.GetAll();
             return customers;
+        }
+
+        public List<CustomerBook> GetReservedBooks()
+        {
+            return _customerRepository.GetReservedBooks();
         }
 
         public async Task UpdateCustomer(CustomProfileModel profile)

@@ -10,12 +10,14 @@ using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Reflection;
 using Library.Api;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
@@ -26,48 +28,51 @@ builder.Services.AddSwaggerGen(options =>
         Version = "v1",
         Description = "Libray REST API"
     });
+    options.AddSecurityDefinition(name: "Bearer", securityScheme: new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Description = "Enter the Bearer Authorization string as following: `Bearer Generated-JWT-Token`",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer"
+    });
+
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+   {
+    {
+        new OpenApiSecurityScheme
+        {
+            Name = "Bearer",
+            In = ParameterLocation.Header,
+            Reference = new OpenApiReference
+            {
+                Id = "Bearer",
+                Type = ReferenceType.SecurityScheme
+            }
+        },
+        new List<string>()
+    }
+    });
     var path = Path.ChangeExtension(Assembly.GetExecutingAssembly().Location, ".xml");
     if (File.Exists(path))
     {
         options.IncludeXmlComments(path);
     }
-    /*
-    options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
-    {
-        Name = "Authorization",
-        In = ParameterLocation.Header,
-        Type = SecuritySchemeType.OAuth2,
-        Flows = new OpenApiOAuthFlows
-        {
-            Implicit = new OpenApiOAuthFlow
-            {
-                Scopes = new Dictionary<string, string>
-                {
-                    { "openid", "Open Id" }
-                },
-                AuthorizationUrl = new Uri(configuration["Authentication:Domain"] + "authorize?audience=" +
-                                           configuration["Authentication:Audience"])
-            }
-        }
-    });
-
-    options.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
-                {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "oauth2"
-                }
-            },
-            new[] { "openid" }
-        }
-    });
-    */
-
+  
     options.EnableAnnotations();
+});
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.Authority = builder.Configuration["IdentityServer:url"];
+        options.Audience = "library-api";
+        options.RequireHttpsMetadata = true;
+    });
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("Admin", policy => policy.RequireRole("Admin"));
+    options.AddPolicy("Customer", policy => policy.RequireRole("Customer"));
 });
 
 builder.Services.AddDbContext<LibraryContext>();

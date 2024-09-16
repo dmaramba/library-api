@@ -1,5 +1,6 @@
 ﻿using Library.Domain.ViewModels;
 using Library.Infrastructure.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -9,6 +10,7 @@ namespace Library.Api.Controllers
 {
     [Route("api/customers/[action]")]
     [ApiController]
+    [Authorize(Roles = "Admin")]
     public class CustomersController : ControllerBase
     {
         private readonly ICustomerService customerService;

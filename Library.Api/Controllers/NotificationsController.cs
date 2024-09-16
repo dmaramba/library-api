@@ -1,6 +1,7 @@
 ﻿using Library.Domain.Models;
 using Library.Domain.ViewModels;
 using Library.Infrastructure.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -10,6 +11,7 @@ namespace Library.Api.Controllers
 {
     [Route("api/notifications/[action]")]
     [ApiController]
+    [Authorize(Roles = "Admin")]
     public class NotificationsController : ControllerBase
     {
 
@@ -35,7 +37,7 @@ namespace Library.Api.Controllers
 
 
         /// <summary>
-        /// Borrow a book by admin
+        /// Add notification
         /// </summary>
         /// <param name="notificationAddModel">The model with book and customer</param>
         [SwaggerOperation(Tags = new[] { "Notifications" })]
@@ -49,7 +51,7 @@ namespace Library.Api.Controllers
         }
 
         /// <summary>
-        /// Borrow a book by admin
+        /// Cancel notification
         /// </summary>
         /// <param name="id">notification id</param>
         [SwaggerOperation(Tags = new[] { "Notifications" })]

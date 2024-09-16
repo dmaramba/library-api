@@ -36,16 +36,25 @@ namespace Library.Infrastructure.Services
 
         public async Task<BorrowBook> BorrowBook(BorrowModel borrow)
         {
-            var borrowItem = new BorrowBook { BookId = borrow.BookId, Returned = false, CustomerId = borrow.CustomerId, DueDate = borrow.DueDate };
-            await _borrowBookRepository.AddAsync(borrowItem);
-            //remove the reservation if any
-            var reserves = _reserveBookRepository.Find(x => x.BookId == borrow.BookId && x.CustomerId == borrow.CustomerId && x.DueDate > DateTime.Now);
-            if (reserves.Any())
+            var currentItem = _borrowBookRepository.Find(x => x.BookId == borrow.BookId && x.CustomerId == borrow.CustomerId && x.Returned == false).FirstOrDefault();
+            if (currentItem != null)
             {
-                await _reserveBookRepository.RemoveRangeAsync(reserves);
+                {
+                    var borrowItem = new BorrowBook { BookId = borrow.BookId, Returned = false, CustomerId = borrow.CustomerId, DueDate = borrow.DueDate };
+                    await _borrowBookRepository.AddAsync(borrowItem);
+                    //remove the reservation if any
+                    var reserves = _reserveBookRepository.Find(x => x.BookId == borrow.BookId && x.CustomerId == borrow.CustomerId && x.DueDate > DateTime.Now);
+                    if (reserves.Any())
+                    {
+                        await _reserveBookRepository.RemoveRangeAsync(reserves);
+                    }
+                    updateBookAvailability(borrow.BookId);
+                    return borrowItem;
+                }
             }
-            updateBookAvailability(borrow.BookId);
-            return borrowItem;
+            else
+                throw new Exception("Customer in possesion of the same book");
+
         }
 
         async void updateBookAvailability(int bookId)
@@ -142,7 +151,8 @@ namespace Library.Infrastructure.Services
                 updateBookAvailability(reserve.BookId);
                 return borrowItem;
             }
-            return reserved;
+            else
+                throw new Exception("Customer already reserved the same book");
         }
 
         public async Task ReturnBook(ReturnModel returnModel)
@@ -156,6 +166,15 @@ namespace Library.Infrastructure.Services
             }
         }
 
+        public async Task CancelReservation(int id)
+        {
+            var reserveBook = await _reserveBookRepository.GetByIdAsync(id);
+            if (reserveBook != null)
+            {
+                await _reserveBookRepository.RemoveAsync(reserveBook);
+            }
+        }
 
+      
     }
 }

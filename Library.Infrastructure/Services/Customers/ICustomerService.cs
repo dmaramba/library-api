@@ -17,5 +17,7 @@ namespace Library.Infrastructure.Services
 
         CustomerModel GetCustomer(int customerId);
 
+        public List<CustomerBook> GetBorrowedBooks();
+        public List<CustomerBook> GetReservedBooks();
     }
 }

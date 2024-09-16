@@ -1,26 +1,26 @@
 ﻿using Library.Domain.Models;
 using Library.Domain.ViewModels;
 using Library.Infrastructure.Services;
-using Microsoft.AspNetCore.Cors.Infrastructure;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.Annotations;
-using static System.Reflection.Metadata.BlobBuilder;
 
 namespace Library.Api.Controllers
 {
     [Route("api/books/[action]")]
     [ApiController]
+    [Authorize(Roles ="Admin")]
     public class BooksController : ControllerBase
     {
         private readonly IBookService bookService;
         private readonly LibrarySetting settings;
-        public BooksController(IBookService bookService, IOptions<LibrarySetting> settings)
+        private readonly ICustomerService customerService;
+        public BooksController(IBookService bookService, IOptions<LibrarySetting> settings, ICustomerService customerService)
         {
             this.bookService = bookService;
             this.settings = settings?.Value;
+            this.customerService = customerService;
         }
 
 
@@ -53,6 +53,33 @@ namespace Library.Api.Controllers
 
 
         /// <summary>
+        /// Gets the list of all borrowed books
+        /// </summary>
+        [SwaggerOperation(Tags = new[] { "Books" })]
+        [HttpGet(Name = nameof(GetBorrowedBooks))]
+        [ProducesResponseType(typeof(IReadOnlyCollection<CustomerBook>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public IActionResult GetBorrowedBooks()
+        {
+
+            return Ok(customerService.GetBorrowedBooks());
+        }
+
+        /// <summary>
+        /// Gets the list of all reserved books
+        /// </summary>
+        [SwaggerOperation(Tags = new[] { "Books" })]
+        [HttpGet(Name = nameof(GetReservedBooks))]
+        [ProducesResponseType(typeof(IReadOnlyCollection<CustomerBook>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public IActionResult GetReservedBooks()
+        {
+
+            return Ok(customerService.GetReservedBooks());
+        }
+
+
+        /// <summary>
         /// Add new book to the library
         /// </summary>
         /// <param name="book">The model with book details</param>
@@ -69,7 +96,7 @@ namespace Library.Api.Controllers
 
 
         /// <summary>
-        /// Borrow a book by admin
+        /// Borrow a book
         /// </summary>
         /// <param name="borrowModel">The model with book and customer</param>
         [SwaggerOperation(Tags = new[] { "Books" })]
@@ -84,7 +111,7 @@ namespace Library.Api.Controllers
 
 
         /// <summary>
-        /// Reserve a book by admin
+        /// Reserve a book
         /// </summary>
         /// <param name="reserveModel">The model with book and customer</param>
         [SwaggerOperation(Tags = new[] { "Books" })]
@@ -99,7 +126,21 @@ namespace Library.Api.Controllers
 
 
         /// <summary>
-        /// Return a book by admin
+        /// Cancel reservation of a book
+        /// </summary>
+        /// <param name="id"></param>
+        [SwaggerOperation(Tags = new[] { "Books" })]
+        [HttpDelete(Name = nameof(CancelReservation))]
+        [ProducesResponseType(typeof(BorrowBook), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<IActionResult> CancelReservation(int id)
+        {
+            await bookService.CancelReservation(id);
+            return Ok();
+        }
+
+        /// <summary>
+        /// Return a book
         /// </summary>
         /// <param name="returnModel">The model with book and customer</param>
         [SwaggerOperation(Tags = new[] { "Books" })]

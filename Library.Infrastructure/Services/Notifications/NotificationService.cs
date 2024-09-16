@@ -18,8 +18,12 @@ namespace Library.Infrastructure.Services
 
         public async Task AddNotification(NotificationAddModel notification)
         {
-            var customer = new Notification { BookId = notification.BookId, CustomerId = notification.BookId, Sent=false };
-            await _notificationRepository.AddAsync(customer);
+            var pendingNotification = _notificationRepository.Find(x => x.BookId == notification.BookId && x.CustomerId == notification.CustomerId && x.Sent == false).FirstOrDefault();
+            if (pendingNotification == null)
+            {
+                var customer = new Notification { BookId = notification.BookId, CustomerId = notification.BookId, Sent = false };
+                await _notificationRepository.AddAsync(customer);
+            }
         }
 
         public async Task CancelNotification(int id)

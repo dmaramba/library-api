@@ -11,5 +11,7 @@ namespace Library.Infrastructure.Repository
     public interface ICustomerRepository : IGenericRepository<Customer>
     {
         public CustomerModel GetCustomerData(int customerId);
+        public List<CustomerBook> GetBorrowedBooks();
+        public List<CustomerBook> GetReservedBooks();
     }
 }

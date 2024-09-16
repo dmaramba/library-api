@@ -1,6 +1,7 @@
 ﻿using Library.Domain.Models;
 using Library.Domain.ViewModels;
 using Library.Infrastructure.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -10,6 +11,7 @@ namespace Library.Api.Controllers
 {
     [Route("api/customer")]
     [ApiController]
+    [Authorize(Roles = "Customer")]
     public class CustomerBooksController : AuthBaseController
     {
         private readonly IBookService bookService;
