@@ -11,7 +11,7 @@ namespace Library.Infrastructure.Services
     public interface ICustomerService
     {
         IEnumerable<Customer> GetCustomers();
-        Task AddCustomer(CustomProfileModel customer);
+        Task AddCustomer(CustomAddProfileModel customer);
 
         Task UpdateCustomer(CustomProfileModel customer);
 

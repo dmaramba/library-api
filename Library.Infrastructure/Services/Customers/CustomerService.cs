@@ -14,7 +14,7 @@ namespace Library.Infrastructure.Services
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _customerRepository = customerRepository ?? throw new ArgumentNullException(nameof(customerRepository));
         }
-        public async Task AddCustomer(CustomProfileModel profile)
+        public async Task AddCustomer(CustomAddProfileModel profile)
         {
             var customer = new Customer { Name = profile.Name, Email = profile.Email };
             await _customerRepository.AddAsync(customer);

@@ -30,7 +30,7 @@ namespace Library.Api.Controllers
         [SwaggerOperation(Tags = new[] { "Books" })]
         [HttpGet(Name = nameof(GetBooks))]
         [ProducesResponseType(typeof(IReadOnlyCollection<BookModel>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public IActionResult GetBooks()
         {
 
@@ -44,7 +44,7 @@ namespace Library.Api.Controllers
         [SwaggerOperation(Tags = new[] { "Books" })]
         [HttpGet(Name = nameof(GetBooksByTitle))]
         [ProducesResponseType(typeof(IReadOnlyCollection<BookModel>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public IActionResult GetBooksByTitle(string title)
         {
 
@@ -75,7 +75,7 @@ namespace Library.Api.Controllers
         [SwaggerOperation(Tags = new[] { "Books" })]
         [HttpPost(Name = nameof(BorrowBook))]
         [ProducesResponseType(typeof(BorrowBook), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> BorrowBook([FromBody] BorrowModel borrowModel)
         {
             var response = await bookService.BorrowBook(borrowModel);
@@ -90,7 +90,7 @@ namespace Library.Api.Controllers
         [SwaggerOperation(Tags = new[] { "Books" })]
         [HttpPost(Name = nameof(ReserveBook))]
         [ProducesResponseType(typeof(BorrowBook), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> ReserveBook([FromBody] ReserveModel reserveModel)
         {
             var response = await bookService.ReserveBook(reserveModel, settings.BorrowMaxDay);
@@ -105,7 +105,7 @@ namespace Library.Api.Controllers
         [SwaggerOperation(Tags = new[] { "Books" })]
         [HttpPost(Name = nameof(ReturnBook))]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> ReturnBook([FromBody] ReturnModel returnModel)
         {
             await bookService.ReturnBook(returnModel);

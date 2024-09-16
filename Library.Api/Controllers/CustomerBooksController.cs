@@ -14,10 +14,12 @@ namespace Library.Api.Controllers
     {
         private readonly IBookService bookService;
         private readonly LibrarySetting settings;
-        public CustomerBooksController(IBookService bookService, IOptions<LibrarySetting> settings)
+        private readonly ICustomerService customerService;
+        public CustomerBooksController(IBookService bookService, IOptions<LibrarySetting> settings, ICustomerService customerService)
         {
             this.bookService = bookService;
             this.settings = settings?.Value;
+            this.customerService = customerService;
         }
 
 
@@ -58,6 +60,19 @@ namespace Library.Api.Controllers
             };
             var response = await bookService.ReserveBook(reserveModel, settings.ReserveMaxHour);
             return Ok(response);
+        }
+
+        /// <summary>
+        /// Get the profile of logged customer including borrowed and reserved books
+        /// </summary>
+        [SwaggerOperation(Tags = new[] { "Customer Books" })]
+        [HttpGet(Name = nameof(GetProfile))]
+        [ProducesResponseType(typeof(IReadOnlyCollection<CustomerModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public IActionResult GetProfile()
+        {
+
+            return Ok(customerService.GetCustomer(UserId));
         }
 
 
