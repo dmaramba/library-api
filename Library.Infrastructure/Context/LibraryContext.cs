@@ -16,13 +16,15 @@ namespace Library.Infrastructure.Context
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseInMemoryDatabase(databaseName: "LibrayDb");
+            //only use for testing , can use a database server
+            optionsBuilder.UseInMemoryDatabase(databaseName: "LibrayDb"); 
         }
 
         public DbSet<Book> Books { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<ReserveBook> ReserveBooks { get; set; }
         public DbSet<BorrowBook> BorrowBooks { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
